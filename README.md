@@ -106,6 +106,24 @@ Set up the credentials for the database in main.cpp:116 -
 asyncsock *asock = new asyncsock(new cdb("127.0.0.1", "**user**", "**pass**", "**db**"), &virtual_fs, 21);
 ```
 
+Run it, login and play around! Break it, fix it, set it online in a sandbox... Learn from it. 
+
+## Implemented commands
+
+There is a very basic implementation of the FTP protocol within this code, mostly adhering to the specification, but not totally...
+
+**USER**
+**PASS**
+**PASV**
+**PORT**
+**CWD**
+**PWD**
+**CDUP**
+**LIST**
+**SYST**
+
+You can find all the networking, and file commands, within sockets(.hpp|.cpp).
+
 ## Contributing
 
 Feel free to fork this and work on it! I would be happy to see your changes, no matter how small, or large. :)
