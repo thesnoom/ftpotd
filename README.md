@@ -116,7 +116,7 @@ Feel free to fork this and work on it! I would be happy to see your changes, no 
 
 ## License
 
-This project is licensed under the GNU PL V3 license - see the [LICENSE.md](LICENSE.md) file for details
+This project is licensed under the GNU PL V3 license - see the [LICENSE](LICENSE) file for details
 
 ## Acknowledgments
 
