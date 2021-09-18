@@ -5,7 +5,7 @@ TARGET	= ftpotd
 FILES	= main.cpp virtfs.cpp db.cpp sockets.cpp
 
 all: $(FILES)
-	$(CC) $(CFLAGS) $(CLIBS) -o $(TARGET) $(FILES)
+	$(CC) $(CFLAGS) $(CLIBS) -o $(TARGET) $(FILES) $(CLIBS)
 
 clean: $(TARGET)
 	$(RM) $(TARGET)

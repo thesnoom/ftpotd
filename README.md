@@ -24,76 +24,50 @@ These instructions will get you a copy of the project up and running on your loc
 
 What things you need to install.
 
+*c++11
+*libevent
 ```
-c++11
-libevent
-mysqlcppconn
-mysql database
+	wget http://monkey.org/~provos/libevent-1.4.14b-stable.tar.gz
+	tar xzf libevent-1.4.14b-stable.tar.gz
+	cd libevent-1.4.14b-stable
+	./configure --prefix=/opt/libevent
+	make
+	make install
+	#You should have libevent installed in /opt/libevent. To make sure:
+	ls -la /opt/libevent
 ```
+	
+*mysqlcppconn
+```
+	apt-get install libmysqlcppconn-dev
+```
+
+*mysql database
+
 
 ### Installing
-
+```
+CREATE DATABASE ftpotd;
+CREATE USER 'user'@'localhost' IDENTIFIED BY 'pass';
+GRANT ALL PRIVILEGES ON * . * TO 'user'@'localhost';
+FLUSH PRIVILEGES;
+```
 Ensure the prerequisites are installed, and create the following tables:
 
 ```
--- MySQL dump 10.16  Distrib 10.2.13-MariaDB, for debian-linux-gnu (x86_64)
---
--- Host: localhost    Database: ftpotd
--- ------------------------------------------------------
--- Server version	10.2.13-MariaDB-10.2.13+maria~stretch-log
 
-DROP TABLE IF EXISTS `activity`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `activity` (
-  `conid_string` varchar(15) DEFAULT NULL,   // connection identifier
-  `data` varchar(4096) DEFAULT NULL,         // command sent
-  `vfs` varchar(16) DEFAULT NULL,            // path from which command occured
-  `epoch` int(11) unsigned DEFAULT NULL      // epoch time of command
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+CREATE TABLE `connections` (`ip_string` varchar(15) DEFAULT NULL,`conid_string` varchar(15) DEFAULT NULL,`close` int(11) DEFAULT NULL,`epoch` int(11) unsigned DEFAULT NULL) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-DROP TABLE IF EXISTS `attempts`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `attempts` (
-  `conid_string` varchar(15) DEFAULT NULL,   // attempt connection identifier
-  `user` varchar(255) DEFAULT NULL,          // attempted user
-  `pass` varchar(255) DEFAULT NULL,          // attempted pass
-  `epoch` int(11) unsigned DEFAULT NULL      // epoch time of attempt
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+CREATE TABLE `logins` (`user` varchar(255) DEFAULT NULL,`pass` varchar(255) DEFAULT NULL) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-DROP TABLE IF EXISTS `authed`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `authed` (
-  `conid_string` varchar(15) DEFAULT NULL,  // authed connection identifier
-  `user` varchar(255) DEFAULT NULL,         // authed username
-  `pass` varchar(255) DEFAULT NULL,         // authed password
-  `epoch` int(11) unsigned DEFAULT NULL     // epoch time of authentication
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+CREATE TABLE `authed` (`conid_string` varchar(15) DEFAULT NULL,`user` varchar(255) DEFAULT NULL,`pass` varchar(255) DEFAULT NULL,`epoch` int(11) unsigned DEFAULT NULL) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-DROP TABLE IF EXISTS `connections`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `connections` (
-  `ip_string` varchar(15) DEFAULT NULL,    // IP address of connection
-  `conid_string` varchar(15) DEFAULT NULL, // random connection identifier
-  `close` int(11) DEFAULT NULL,            // boolean to indicate connection close
-  `epoch` int(11) unsigned DEFAULT NULL    // epoch time of interaction
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+CREATE TABLE `attempts` (`conid_string` varchar(15) DEFAULT NULL,`user` varchar(255) DEFAULT NULL,`pass` varchar(255) DEFAULT NULL,`epoch` int(11) unsigned DEFAULT NULL) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-
-DROP TABLE IF EXISTS `logins`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `logins` (
-  `user` varchar(255) DEFAULT NULL,  // accepted usernames
-  `pass` varchar(255) DEFAULT NULL   // accepted passwords
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
+CREATE TABLE `activity` (`conid_string` varchar(15) DEFAULT NULL,`data` varchar(4096) DEFAULT NULL,`vfs` varchar(16) DEFAULT NULL,`epoch` int(11) unsigned DEFAULT NULL) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 ```
 
-Populate the logins table, an example:
+Compleate the table of logins:
 
 ```
 INSERT INTO `logins` VALUES ('root','q1w2e3r4t5y6'),('root','Passw0rd!'),('ftp','itsasecret'),('ftp','12345678'),('letmein','letmein'),('test','developers');
